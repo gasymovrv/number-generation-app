@@ -1,0 +1,14 @@
+plugins {
+	id 'org.springframework.boot' version "${springVersion}"
+}
+
+version = '0.0.1-SNAPSHOT'
+
+dependencies {
+	compile ('org.springframework.kafka:spring-kafka')
+	compile('org.springframework.boot:spring-boot-starter-webflux')
+
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+	testImplementation('org.springframework.kafka:spring-kafka-test')
+	testCompile('io.projectreactor:reactor-test')
+}

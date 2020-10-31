@@ -1,0 +1,5 @@
+rootProject.name = 'number-generation-app'
+
+include 'number-api'
+include 'number-generator'
+include 'range-generator'

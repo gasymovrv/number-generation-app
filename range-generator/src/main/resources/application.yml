@@ -1,0 +1,25 @@
+server:
+  port: ${SERVER_PORT:8061}
+
+spring:
+  application:
+    name: number-api
+  main:
+    banner-mode: off
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    default-property-inclusion: non_null
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    consumer:
+      group-id: range-generator-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+kafka:
+  ranges-topic: generation.ranges
+  max-messages: ${MAX_MESSAGES:500000}
+
+enable-init-controller: ${ENABLE_INIT_CONTROLLER:true}

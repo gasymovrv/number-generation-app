@@ -1,0 +1,36 @@
+buildscript {
+    ext {
+        lombokVersion = '1.18.6'
+        springVersion = '2.3.3.RELEASE'
+    }
+}
+
+plugins {
+    id "io.spring.dependency-management" version "1.0.8.RELEASE"
+}
+
+subprojects {
+    repositories {
+        mavenCentral()
+    }
+
+    apply plugin: 'java'
+    apply plugin: 'io.spring.dependency-management'
+
+    group 'ru.maxilect'
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+
+    dependencies {
+        // lombok
+        compile("org.projectlombok:lombok")
+        annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+        testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom("org.springframework.boot:spring-boot-dependencies:${springVersion}")
+        }
+    }
+}

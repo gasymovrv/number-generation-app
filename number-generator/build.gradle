@@ -1,0 +1,13 @@
+plugins {
+	id 'org.springframework.boot' version "${springVersion}"
+}
+
+version = '0.0.1-SNAPSHOT'
+
+dependencies {
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: "${springVersion}"
+	compile ('org.springframework.kafka:spring-kafka')
+
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+	testImplementation('org.springframework.kafka:spring-kafka-test')
+}
