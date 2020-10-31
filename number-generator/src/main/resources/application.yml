@@ -1,6 +1,6 @@
 spring:
   application:
-    name: number-api
+    name: number-generator
   main:
     banner-mode: off
     web-application-type: none

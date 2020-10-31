@@ -1,5 +1,71 @@
 version: '2.4'
 services:
+
+  number-api:
+    build: number-api
+    environment:
+      LISTENERS_COUNT: $LISTENERS_COUNT
+      BUFFER_SIZE: $BUFFER_SIZE
+      JAVA_OPTS: "-Xmx200m -agentlib:jdwp=transport=dt_socket,address=7777,server=y,suspend=n"
+      DEBUG_PORT: 7777
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    ports:
+      - "8070-8079:8080"
+      - "7780-7789:7777"
+    image: number-api
+    restart: "no"
+    depends_on:
+      number-generator:
+        condition: service_started
+      kafka:
+        condition: service_healthy
+    logging:
+      options:
+        max-size: "50m"
+        max-file: "10"
+
+  number-generator:
+    build: number-generator
+    environment:
+      LISTENERS_COUNT: $LISTENERS_COUNT
+      JAVA_OPTS: "-Xmx200m -agentlib:jdwp=transport=dt_socket,address=7777,server=y,suspend=n"
+      DEBUG_PORT: 7777
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    ports:
+      - "7790-7799:7777"
+    image: number-generator
+    restart: "no"
+    depends_on:
+      range-generator:
+        condition: service_started
+      kafka:
+        condition: service_healthy
+    logging:
+      options:
+        max-size: "50m"
+        max-file: "10"
+
+  range-generator:
+    build: range-generator
+    environment:
+      LISTENERS_COUNT: $LISTENERS_COUNT
+      MAX_MESSAGES: $MAX_MESSAGES
+      JAVA_OPTS: "-Xmx200m -agentlib:jdwp=transport=dt_socket,address=7777,server=y,suspend=n"
+      DEBUG_PORT: 7777
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    ports:
+      - 8080:8080
+      - 7777:7777
+    image: range-generator
+    restart: "no"
+    depends_on:
+      kafka:
+        condition: service_healthy
+    logging:
+      options:
+        max-size: "50m"
+        max-file: "10"
+
   zookeeper:
     image: zookeeper:3.4.13
     ports:
@@ -10,6 +76,7 @@ services:
       interval: 1s
       timeout: 5s
       retries: 180
+
   kafka:
     image: wurstmeister/kafka:2.13-2.6.0
     ports:
