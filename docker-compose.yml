@@ -8,10 +8,10 @@ services:
       BUFFER_SIZE: $BUFFER_SIZE
       JAVA_OPTS: "-Xmx200m -agentlib:jdwp=transport=dt_socket,address=7777,server=y,suspend=n"
       DEBUG_PORT: 7777
-      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      KAFKA_BOOTSTRAP_SERVERS: "kafka:9091"
     ports:
-      - "8070-8079:8080"
-      - "7780-7789:7777"
+      - 8080
+      - 7777
     image: number-api
     restart: "no"
     depends_on:
@@ -30,9 +30,9 @@ services:
       LISTENERS_COUNT: $LISTENERS_COUNT
       JAVA_OPTS: "-Xmx200m -agentlib:jdwp=transport=dt_socket,address=7777,server=y,suspend=n"
       DEBUG_PORT: 7777
-      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      KAFKA_BOOTSTRAP_SERVERS: "kafka:9091"
     ports:
-      - "7790-7799:7777"
+      - 7777
     image: number-generator
     restart: "no"
     depends_on:
@@ -52,7 +52,7 @@ services:
       MAX_MESSAGES: $MAX_MESSAGES
       JAVA_OPTS: "-Xmx200m -agentlib:jdwp=transport=dt_socket,address=7777,server=y,suspend=n"
       DEBUG_PORT: 7777
-      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      KAFKA_BOOTSTRAP_SERVERS: "kafka:9091"
     ports:
       - 8080:8080
       - 7777:7777
