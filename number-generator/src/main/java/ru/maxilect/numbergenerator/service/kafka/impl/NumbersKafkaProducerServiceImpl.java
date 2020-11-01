@@ -1,6 +1,7 @@
 package ru.maxilect.numbergenerator.service.kafka.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.math.BigInteger;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -12,16 +13,16 @@ import ru.maxilect.numbergenerator.service.kafka.KafkaProducerService;
 @Slf4j
 public class NumbersKafkaProducerServiceImpl
         extends BaseKafkaProducerService
-        implements KafkaProducerService<String, NaturalNumber> {
+        implements KafkaProducerService<BigInteger, NaturalNumber> {
 
-    public NumbersKafkaProducerServiceImpl(KafkaTemplate<String, String> kafkaTemplate, ObjectMapper objectMapper) {
+    public NumbersKafkaProducerServiceImpl(KafkaTemplate<byte[], byte[]> kafkaTemplate, ObjectMapper objectMapper) {
         super(kafkaTemplate, objectMapper);
     }
 
     @Override
     public void send(String topic,
-                     String kafkaKey,
+                     BigInteger kafkaKey,
                      NaturalNumber document) {
-        commonSend(topic, kafkaKey, document);
+        commonSend(topic, kafkaKey.toByteArray(), document);
     }
 }

@@ -30,13 +30,13 @@ public class KafkaListenerServiceImpl implements KafkaListenerService<NaturalNum
     }
 
     @KafkaListener(topics = "${kafka.consumer-topic}")
-    public void listenTopic(ConsumerRecord<String, String> record,
+    public void listenTopic(ConsumerRecord<byte[], byte[]> record,
                             Acknowledgment acknowledgment) {
         log.info("Got value from kafka: {}", record.key());
         NaturalNumber naturalNumber = deserialize(record.value(), NaturalNumber.class)
                 .orElseThrow(() ->
                         new IllegalArgumentException("Error while deserializing value with key: "
-                                + record.key()));
+                                + new String(record.key())));
         if (buffer.size() < queueSize) {
             //Пока в буфере есть место добавляем прочитанные сообщения и отмечаем их.
             //Минус буфера в том, что все загруженные в него сообщения потеряются в случае падения сервиса
@@ -48,7 +48,7 @@ public class KafkaListenerServiceImpl implements KafkaListenerService<NaturalNum
         }
     }
 
-    private <T> Optional<T> deserialize(String json, Class<T> type) {
+    private <T> Optional<T> deserialize(byte[] json, Class<T> type) {
         try {
             return Optional.of(objectMapper.readValue(json, type));
         } catch (Exception e) {

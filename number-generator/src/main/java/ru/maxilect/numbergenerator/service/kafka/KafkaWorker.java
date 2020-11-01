@@ -16,7 +16,7 @@ import ru.maxilect.numbergenerator.domain.Range;
 @RequiredArgsConstructor
 @Slf4j
 public class KafkaWorker {
-    private final KafkaProducerService<String, NaturalNumber> kafkaNumbersProducer;
+    private final KafkaProducerService<BigInteger, NaturalNumber> kafkaNumbersProducer;
 
     private final ObjectMapper objectMapper;
 
@@ -53,8 +53,7 @@ public class KafkaWorker {
              i = i.add(BigInteger.ONE)
         ) {
             NaturalNumber nextNumber = new NaturalNumber(i);
-            //todo поэксперементировать с разными типами данных ключа и значения (например bytes) и проверить размер топика
-            kafkaNumbersProducer.send(numbersTopic, nextNumber.getId().toString(), nextNumber);
+            kafkaNumbersProducer.send(numbersTopic, nextNumber.getId(), nextNumber);
         }
     }
 

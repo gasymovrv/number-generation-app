@@ -15,8 +15,8 @@ spring:
     consumer:
       group-id: number-api-group
       auto-offset-reset: earliest
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      key-deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
       enable-auto-commit: false
 
 kafka:

@@ -31,7 +31,7 @@ public class KafkaConfig {
     }
 
     @Bean
-    public ProducerFactory<String, String> producerFactory() {
+    public ProducerFactory<byte[], byte[]> producerFactory() {
         return new DefaultKafkaProducerFactory<>(kafkaProperties.buildProducerProperties());
     }
 
@@ -41,8 +41,8 @@ public class KafkaConfig {
     }
 
     @Bean
-    public KafkaTemplate<String, String> kafkaTemplate() {
-        return new KafkaTemplate<>(producerFactory());
+    public KafkaTemplate<byte[], byte[]> kafkaTemplate() {
+        return new KafkaTemplate<byte[], byte[]>(producerFactory());
     }
 
 
