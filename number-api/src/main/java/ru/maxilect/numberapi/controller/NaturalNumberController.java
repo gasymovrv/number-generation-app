@@ -22,9 +22,12 @@ public class NaturalNumberController {
 
     @GetMapping
     public ResponseEntity getNumber() {
-        NaturalNumber number = kafkaListenerService.getBuffer().poll();
-        if (number == null) {
-            return new ResponseEntity<>("No numbers generated, please try later", HttpStatus.SERVICE_UNAVAILABLE);
+        NaturalNumber number;
+        try {
+            number = kafkaListenerService.getBuffer().take();
+        } catch (Exception e) {
+            log.error("#NaturalNumberController: exception occurred while taking element from buffer", e);
+            return new ResponseEntity<>("Error occurred while generation numbers, please try later", HttpStatus.SERVICE_UNAVAILABLE);
         }
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Cache-Control", "no-cache, no-store");

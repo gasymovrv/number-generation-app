@@ -15,7 +15,7 @@ public class NumbersKafkaProducerServiceImpl
         extends BaseKafkaProducerService
         implements KafkaProducerService<BigInteger, NaturalNumber> {
 
-    public NumbersKafkaProducerServiceImpl(KafkaTemplate<byte[], byte[]> kafkaTemplate, ObjectMapper objectMapper) {
+    public NumbersKafkaProducerServiceImpl(KafkaTemplate<String, String> kafkaTemplate, ObjectMapper objectMapper) {
         super(kafkaTemplate, objectMapper);
     }
 
@@ -23,6 +23,6 @@ public class NumbersKafkaProducerServiceImpl
     public void send(String topic,
                      BigInteger kafkaKey,
                      NaturalNumber document) {
-        commonSend(topic, kafkaKey.toByteArray(), document);
+        commonSend(topic, kafkaKey.toString(), document);
     }
 }

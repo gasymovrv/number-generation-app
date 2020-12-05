@@ -14,16 +14,16 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class BaseKafkaProducerService {
 
-    private final KafkaTemplate<byte[], byte[]> kafkaTemplate;
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
     private final ObjectMapper objectMapper;
 
     protected void commonSend(String topic,
-                              byte[] kafkaKey,
+                              String kafkaKey,
                               Object document) {
-        byte[] json = null;
+        String json = null;
         try {
-            json = objectMapper.writeValueAsBytes(document);
+            json = objectMapper.writeValueAsString(document);
         } catch (JsonProcessingException e) {
             log.error("#KafkaProducerService: error while writing message to json", e);
         }
@@ -35,7 +35,7 @@ public class BaseKafkaProducerService {
         log.error("#KafkaProducerService: cannot send message to kafka: ", throwable);
     }
 
-    private void successCallback(SendResult<byte[], byte[]> sendResult) {
+    private void successCallback(SendResult<String, String> sendResult) {
         log.debug("#KafkaProducerService: sent message [{}]", sendResult);
     }
 }

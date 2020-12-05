@@ -48,7 +48,7 @@ services:
   range-generator:
     build: range-generator
     environment:
-      MAX_MESSAGES: $MAX_MESSAGES
+      LAST_NUMBER: $LAST_NUMBER
       ENABLE_INIT_CONTROLLER: $ENABLE_INIT_CONTROLLER
       JAVA_OPTS: "-Xmx200m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:7777"
       DEBUG_PORT: 7777

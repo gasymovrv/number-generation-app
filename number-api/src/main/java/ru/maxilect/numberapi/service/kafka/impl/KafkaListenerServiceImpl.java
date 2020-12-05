@@ -17,34 +17,29 @@ import ru.maxilect.numberapi.service.kafka.KafkaListenerService;
 @Slf4j
 public class KafkaListenerServiceImpl implements KafkaListenerService<NaturalNumber> {
 
-    private int queueSize;
-
     private final BlockingQueue<NaturalNumber> buffer;
 
     private final ObjectMapper objectMapper;
 
     public KafkaListenerServiceImpl(ObjectMapper objectMapper, @Value("${buffer-size}") int bufferSize) {
         this.objectMapper = objectMapper;
-        this.queueSize = bufferSize;
         buffer = new ArrayBlockingQueue<>(bufferSize);
     }
 
     @KafkaListener(topics = "${kafka.consumer-topic}")
-    public void listenTopic(ConsumerRecord<byte[], byte[]> record,
-                            Acknowledgment acknowledgment) {
+    public void listenTopic(ConsumerRecord<byte[], byte[]> record) {
         log.info("Got value from kafka: {}", record.key());
         NaturalNumber naturalNumber = deserialize(record.value(), NaturalNumber.class)
                 .orElseThrow(() ->
                         new IllegalArgumentException("Error while deserializing value with key: "
                                 + new String(record.key())));
-        if (buffer.size() < queueSize) {
-            //Пока в буфере есть место добавляем прочитанные сообщения и отмечаем их.
+        try {
+            //Если в буфере есть место, то добавляем прочитанное сообщение или ждем пока место не появится.
             //Минус буфера в том, что все загруженные в него сообщения потеряются в случае падения сервиса
-            buffer.add(naturalNumber);
-            acknowledgment.acknowledge();
-        } else {
-            //Иначе бесконечно повторяем чтения без "acknowledge" пока место не освободится
-            acknowledgment.nack(100);
+            buffer.put(naturalNumber);
+        } catch (InterruptedException e) {
+            log.error("#KafkaListener: exception in buffer", e);
+            throw new RuntimeException(e);
         }
     }
 

@@ -23,13 +23,13 @@ public class KafkaWorker {
     @Value("${kafka.ranges-topic}")
     private String rangesTopic;
 
-    @Value("${kafka.max-messages}")
-    private BigInteger maxMessages;
+    @Value("${kafka.last-number}")
+    private BigInteger lastNumber;
 
     /**
      * 1. Считываем сообщение (диапазон) из топика ranges-topic
      * 2. Парсим сообщение в {@link ru.maxilect.rangegenerator.domain.Range}
-     * 3. Сдвигаем оффсет топика ranges-topic если лимит (max-messages) не достигнут
+     * 3. Сдвигаем оффсет топика ranges-topic если лимит (last-number) не достигнут
      * 4. Создаем и отправляем следующий диапазон в ranges-topic
      *
      * @param record         сообщение - диапазон
@@ -42,8 +42,8 @@ public class KafkaWorker {
 
         try {
             Range range = objectMapper.readValue(record.value(), Range.class);
-            if (range.getEnd().compareTo(maxMessages) >= 0) {
-                log.info("Range ({}) is greater than MAX_MESSAGES: {}", record.key(), maxMessages);
+            if (range.getEnd().compareTo(lastNumber) >= 0) {
+                log.info("Range ({}) is greater than LAST_NUMBER: {}", record.key(), lastNumber);
                 //Необходимо для того, чтобы при перезапуске с большим maxMessages продолжилось чтение
                 acknowledgment.nack(5000);
             } else {

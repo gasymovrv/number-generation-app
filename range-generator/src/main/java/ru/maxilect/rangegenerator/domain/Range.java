@@ -9,13 +9,12 @@ import lombok.Data;
 public class Range {
     private BigInteger start;
     private BigInteger end;
+    private BigInteger range;
 
     public static Range next(Range previous) {
-        BigInteger start = previous.getStart();
         BigInteger end = previous.getEnd();
-        BigInteger range = end.subtract(start);
         BigInteger nextStart = end.add(BigInteger.ONE);
-        BigInteger nextEnd = nextStart.add(range);
-        return new Range(nextStart, nextEnd);
+        BigInteger nextEnd = nextStart.add(previous.range.subtract(BigInteger.ONE));
+        return new Range(nextStart, nextEnd, previous.range);
     }
 }

@@ -20,6 +20,6 @@ spring:
 
 kafka:
   ranges-topic: generation.ranges
-  max-messages: ${MAX_MESSAGES:500000}
+  last-number: ${LAST_NUMBER:500000}
 
 enable-init-controller: ${ENABLE_INIT_CONTROLLER:true}
